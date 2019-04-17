@@ -1,0 +1,29 @@
+{
+  "name": "twitter-draguer",
+  "version": "1.0.0",
+  "description": "draguer le titiz automatiquement in scalable way",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "set NODE_ENV=development & nodemon -r esm server.js"
+  },
+  "keywords": [
+    "twitter",
+    "api",
+    "graphql",
+    "nodejs",
+    "react",
+    "apollo"
+  ],
+  "author": "Abdeltif Bouziane <contact@eyetags.net>",
+  "license": "MIT",
+  "dependencies": {
+    "apollo-datasource-rest": "^0.3.2",
+    "apollo-server-express": "^2.4.8",
+    "esm": "^3.2.22",
+    "express": "^4.16.4",
+    "graphql": "^14.2.1",
+    "lodash": "^4.17.11",
+    "twit": "^2.2.11"
+  }
+}
