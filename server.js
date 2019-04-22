@@ -1,18 +1,25 @@
-import express from 'express'
-import { ApolloServer } from 'apollo-server-express'
-import typeDefs from './graphql/schema'
-import resolvers from './graphql/resolvers'
-import fs from 'fs'
-import https from 'https'
-import http from 'http'
-import Twitter from './apis/twitter'
+import express from 'express';
+import { ApolloServer } from 'apollo-server-express';
+import typeDefs from './graphql/schema';
+import resolvers from './graphql/resolvers';
+import fs from 'fs';
+import https from 'https';
+import http from 'http';
+import Twitter from './apis/twitter';
+require('dotenv').config();
+import mongo from './config/mongo';
+import GenderML from "./apis/genderML";
+import MLJob from "./jobs/genderAIJob";
+
+
+
 
 
 const configurations = {
     // Note: You may need sudo to run on port 443
     production: { ssl: true, port: 443, hostname: 'example.com' },
     development: { ssl: false, port: 4000, hostname: 'localhost' }
-}
+};
 
 const environment = process.env.NODE_ENV || 'production';
 const config = configurations.development;
@@ -23,22 +30,23 @@ const apollo = new ApolloServer({
     resolvers,
     dataSources: () => {
         return {
-            twitterApi: new Twitter(),
-            // personalizationAPI: new PersonalizationAPI(),
+            twitter: new Twitter(),
+            genderML: new GenderML(),
         };
     },
-    context: () => {
+    context: ({req}) => {
         return {
-            token: process.env.TWITTER_CUSTOMER_KEY,
+            token: "",
         };
     },
 });
 
-const app = express()
-apollo.applyMiddleware({ app })
+
+const app = express();
+apollo.applyMiddleware({ app });
 
 // Create the HTTPS or HTTP server, per configuration
-var server
+let server;
 if (config.ssl) {
     // Assumes certificates are in .ssl folder from package root. Make sure the files
     // are secured.
@@ -56,9 +64,10 @@ if (config.ssl) {
 // Add subscription support
 apollo.installSubscriptionHandlers(server)
 
-server.listen({ port: config.port }, () =>
+server.listen({ port: config.port }, () =>{
     console.log(
         'Server ready at',
         `http${config.ssl ? 's' : ''}://${config.hostname}:${config.port}${apollo.graphqlPath}`
-    )
-);
+    );
+        MLJob;
+});

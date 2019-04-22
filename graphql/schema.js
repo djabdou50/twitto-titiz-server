@@ -19,11 +19,34 @@ const schema = gql`
     id: Float
     text: String
     user: String
+    media: String
+  }
+  
+  type Status {
+    text: String
+  }
+  
+  type Subscription {
+    tweetsAdded: Tweet
+  }
+  
+  type Gender {
+    result: String
   }
 
   type Query {
     author(id:ID): Author
     searchTweets(tweet:TweetInput): [Tweet]
+    auth: String
+    getbearer: String
+    post(Status: String): String
+    stream(Keyword: String): String
+    getGender(url: String): String
+  }
+  
+  type Mutation {
+    stream(Keyword: String): String
+    streamStop: String
   }
 `
 
