@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "set NODE_ENV=development& nodemon -r esm server.js",
-    "prod": "node -r esm server.js",
-    "dev": "node server.js"
+    "dev": "set NODE_ENV=development& nodemon -r esm server.js",
+    "start": "node -r esm server.js",
+    "start-org": "node server.js"
   },
   "keywords": [
     "twitter",
