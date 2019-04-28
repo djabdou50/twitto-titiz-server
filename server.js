@@ -13,12 +13,10 @@ import MLJob from "./jobs/genderAIJob";
 
 
 
-
-
 const configurations = {
     // Note: You may need sudo to run on port 443
-    production: { ssl: true, port: 443, hostname: 'example.com' },
-    development: { ssl: false, port: 4000, hostname: 'localhost' }
+    production: { ssl: false, port: 4000, hostname: 'example.com' },
+    development: { ssl: true, port: 4000, hostname: 'localhost' }
 };
 
 const environment = process.env.NODE_ENV || 'production';
@@ -28,6 +26,9 @@ const config = configurations.development;
 const apollo = new ApolloServer({
     typeDefs,
     resolvers,
+    subscriptions: {
+        onConnect: () => console.log('Connected to websocket'),
+    },
     dataSources: () => {
         return {
             twitter: new Twitter(),
@@ -41,9 +42,11 @@ const apollo = new ApolloServer({
     },
 });
 
-
 const app = express();
-apollo.applyMiddleware({ app });
+apollo.applyMiddleware({
+    app,
+    // path: '/api'
+});
 
 // Create the HTTPS or HTTP server, per configuration
 let server;
@@ -53,7 +56,7 @@ if (config.ssl) {
     server = https.createServer(
         {
             key: fs.readFileSync(`./ssl/${environment}/server.key`),
-            cert: fs.readFileSync(`./ssl/${environment}/server.crt`)
+            cert: fs.readFileSync(`./ssl/${environment}/server.cert`)
         },
         app
     )

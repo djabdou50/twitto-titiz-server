@@ -1,19 +1,15 @@
 const { PubSub } = require('apollo-server-express');
+import Tweet from '../model/tweet'
 
 export const pubsub = new PubSub();
 
 const TWEET_ADDED = 'TWEET_ADDED';
+const TWEETS_ADDED = 'TWEETS_ADDED';
 
 
 
 const resolvers = {
     Query: {
-        author(parent, args, context, info) {
-            let author = authors.filter( function (author, i) {
-                return author.id === parseFloat(args.id);
-            });
-            return author[0];
-        },
         searchTweets: async (_source, { tweet }, { dataSources }) => {
             let results =  await dataSources.twitter.postSearch(tweet.keyword);
             return results.statuses.map( result => {
@@ -33,17 +29,34 @@ const resolvers = {
 
             })
         },
-        post: async (_source, {Status}, { dataSources }) => {
-            return dataSources.twitter.postStatus(Status);
-        },
+        // post: async (_source, {Status}, { dataSources }) => {
+        //     return dataSources.twitter.postStatus(Status);
+        // },
         stream: async (_source, {Status}, { dataSources }) => {
             return dataSources.twitter.getStream(Status);
         },
-        auth: async (_source, { tweet }, { dataSources }) => {
-            return dataSources.twitter.generateBearer();
-        },
-        getbearer: async (_source, { tweet }, { dataSources }) => {
-            return dataSources.twitter.getbearer();
+        // auth: async (_source, { tweet }, { dataSources }) => {
+        //     return dataSources.twitter.generateBearer();
+        // },
+        // getbearer: async (_source, { tweet }, { dataSources }) => {
+        //     return dataSources.twitter.getbearer();
+        // },
+        getSelfies: async (parent, {offset}, context, info) => {
+
+            let perpage = 20;
+            offset = offset ? (offset.offset * perpage) : 0;
+
+            // console.log("perpage: " + perpage + " offset: " + offset)
+
+            let female = await Tweet.find({gender: "female"}).sort({ _id: -1 }).skip(offset).limit(perpage);
+            let male = await Tweet.find({gender: "male"}).sort({ _id: -1 }).skip(offset).limit(perpage);
+
+            let selfies = {
+                female: female,
+                male: male,
+            };
+
+            return selfies;
         },
         getGender: async (_source, { url }, { dataSources }) => {
             let result = dataSources.genderML.detect(url).then( result => {
@@ -67,6 +80,10 @@ const resolvers = {
         tweetsAdded: {
             // Additional event labels can be passed to asyncIterator creation
             subscribe: () => pubsub.asyncIterator([TWEET_ADDED]),
+        },
+        getTweets: {
+            // Additional event labels can be passed to asyncIterator creation
+            subscribe: () => pubsub.asyncIterator([TWEETS_ADDED]),
         },
     },
     Mutation: {

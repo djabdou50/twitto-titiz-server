@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "set NODE_ENV=development & nodemon -r esm server.js",
+    "start": "set NODE_ENV=development& nodemon -r esm server.js",
+    "prod": "node -r esm server.js",
     "dev": "node server.js"
   },
   "keywords": [
@@ -29,6 +30,7 @@
     "graphql": "^14.2.1",
     "lodash": "^4.17.11",
     "mongoose": "^5.5.2",
-    "twit": "^2.2.11"
+    "twit": "^2.2.11",
+    "yarn": "^1.15.2"
   }
 }

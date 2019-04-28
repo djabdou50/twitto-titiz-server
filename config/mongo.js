@@ -2,13 +2,6 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 import {config} from 'dotenv';
 
-// const url = 'mongodb://eyetags:1980.azama@cluster0-shard-00-00-i61og.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true';
-// const url = 'mongodb://gqluser:pass@mongodb:27017/graphqldb';
-// mongoose.connect(url, { useNewUrlParser: true });
-// mongoose.connection.once('open', () => console.log(`Connected to mongo at ${url}`));
-//node mongoose.connect( 'mongodb://gqluser:pass@mongodb:27017/graphqldb' , { useNewUrlParser: true });
-
-
 
 let connectWithRetry = () => {
 
@@ -18,6 +11,7 @@ let connectWithRetry = () => {
         useNewUrlParser: true,
         reconnectTries: 10,
         reconnectInterval: 500,
+        useCreateIndex: true,
     }).then(
         () => {
             console.log(`Connected to mongo at ${urldb}`)
@@ -27,6 +21,8 @@ let connectWithRetry = () => {
             setTimeout(connectWithRetry, 5000);
         }
     );
+
+    mongoose.set('debug', true);
 
 };
 export default connectWithRetry();

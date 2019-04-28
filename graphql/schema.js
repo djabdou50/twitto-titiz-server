@@ -1,15 +1,6 @@
 const { gql } = require('apollo-server-express');
 
 const schema = gql`
-  type Book {
-    title: String
-    author: Author
-  }
-
-  type Author {
-    id:Float
-    books: [Book]
-  }
   
   input TweetInput {
     keyword: String
@@ -20,34 +11,45 @@ const schema = gql`
     text: String
     user: String
     media: String
+    created_at: String
+    screen_name: String
+    gender: String
+    _id: String
   }
   
   type Status {
     text: String
   }
   
-  type Subscription {
-    tweetsAdded: Tweet
-  }
-  
   type Gender {
     result: String
   }
+  
+  type Selfies {
+    male: [Tweet]
+    female: [Tweet]
+  }
+  
+  input offsetInput {
+    offset: Float
+  }
 
   type Query {
-    author(id:ID): Author
     searchTweets(tweet:TweetInput): [Tweet]
-    auth: String
-    getbearer: String
-    post(Status: String): String
     stream(Keyword: String): String
     getGender(url: String): String
+    getSelfies(offset: offsetInput): Selfies
   }
   
   type Mutation {
     stream(Keyword: String): String
     streamStop: String
   }
-`
+  
+  type Subscription {
+    tweetsAdded: Tweet
+    getTweets: Tweet
+  }
+`;
 
 export default schema;

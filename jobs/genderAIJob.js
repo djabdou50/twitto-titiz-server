@@ -1,6 +1,9 @@
 import addQueue from '../config/beeQueue'
 import GenderML from "../apis/genderML";
+import Tweet from '../model/tweet';
+import {pubsub} from '../graphql/resolvers';
 
+const TWEET_ADDED = 'TWEET_ADDED';
 
 let genderML = async (url) => {
 
@@ -29,13 +32,22 @@ let MLJob = async (test) => {
             if(result.result.length === 1){
                 console.log(job.data.media)
                 console.log('\x1b[33m%s\x1b[0m: ', result.result[0].gender)
-                return result.result[0].gender;
+                job.data.gender = result.result[0].gender;
+
+                // publish to grapql
+
+
+                return new Tweet(job.data).save().then(data => {
+                    pubsub.publish(TWEET_ADDED, { tweetsAdded: job.data });
+                    return data;
+                });
+                // return result.result[0].gender;
             }else {
                 console.log('\x1b[31m%s\x1b[0m: ', "please choose an image with single humain")
                 return "ok";
             }
         });
-        // return new Tweet(job.data).save();
+
     });
 
 };
