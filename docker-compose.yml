@@ -1,0 +1,45 @@
+version: '3.1'
+
+services:
+
+  #node js / graphql / apollo server
+  node:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: apollo
+    ports:
+    - 4040:4000
+#    restart: on-failure
+    networks:
+    - twitto-network
+
+
+  #OpenCV TF Dlib for image recognising
+  ML:
+    image: eyetags/genderizer:1.0.0
+    container_name: genderizer
+    restart: on-failure
+    ports:
+    - 5000:5000
+    networks:
+    - twitto-network
+
+  #React SPA with apollo client
+  front:
+    image: react/front:latest
+    container_name: front
+    #    build:
+#      context: ../twittotitiz/
+#      dockerfile: ../twittotitiz/Dockerfile
+    ports:
+    - 80:80
+    restart: on-failure
+    networks:
+    - twitto-network
+    links:
+    - node
+
+networks:
+  twitto-network:
+    driver: bridge
