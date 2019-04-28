@@ -15,8 +15,8 @@ import MLJob from "./jobs/genderAIJob";
 
 const configurations = {
     // Note: You may need sudo to run on port 443
-    production: { ssl: false, port: 4000, hostname: 'example.com' },
-    development: { ssl: false, port: 4000, hostname: 'localhost' }
+    production: { ssl: false, port: process.env.PORT || 4000, hostname: '0.0.0.0' },
+    development: { ssl: false, port: process.env.PORT || 4000, hostname: '0.0.0.0' }
 };
 
 const environment = process.env.NODE_ENV || 'production';
