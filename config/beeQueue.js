@@ -9,7 +9,7 @@ const addQueue = new Queue('findTweets', {
         db: 0,
         removeOnSuccess: false,
     },
-    // isWorker: false
+    // isWorker: false // TODO : must change
 });
 
 export default addQueue;

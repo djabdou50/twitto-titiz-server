@@ -73,9 +73,7 @@ export default class Twitter extends RESTDataSource {
 
     async getStream(Keyword, action){
 
-
         console.log(Keyword)
-
 
         let keyword = (Keyword === undefined)? "selfie": Keyword;
         let stream = this.T.stream('statuses/filter', { track: [Keyword] });
@@ -90,7 +88,7 @@ export default class Twitter extends RESTDataSource {
             }catch (e) {}
 
             let retweet = tweet.text.indexOf("RT @");
-            console.log(retweet, tweet.text )
+            console.log('\x1b[34m%s\x1b[0m: ', "Twitter", retweet +' '+ tweet.text )
 
             let singletweet = {
                 id: tweet.id,

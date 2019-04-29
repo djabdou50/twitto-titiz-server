@@ -36,7 +36,6 @@ let MLJob = async (test) => {
 
                 // publish to grapql
 
-
                 return new Tweet(job.data).save().then(data => {
                     pubsub.publish(TWEET_ADDED, { tweetsAdded: job.data });
                     return data;
@@ -50,6 +49,7 @@ let MLJob = async (test) => {
 
     });
 
+
 };
 
-export default MLJob();
+export default MLJob().then(job => {return job}).catch( err => console.log('\x1b[31m%s\x1b[0m ','something happend in jobs! '));
