@@ -73,4 +73,7 @@ server.listen({ port: config.port }, () =>{
         `http${config.ssl ? 's' : ''}://${config.hostname}:${config.port}${apollo.graphqlPath}`
     );
         MLJob;
+
+        let tw = new Twitter();
+        tw.getStream("selfie")
 });
