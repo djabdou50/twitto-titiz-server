@@ -1,9 +1,10 @@
 const { RESTDataSource } = require('apollo-datasource-rest');
+require('dotenv').config();
 
 export default class GenderML extends RESTDataSource {
     constructor() {
         super();
-        this.baseURL = 'http://192.168.99.100:5000/';
+        this.baseURL = process.env.GENDERIZER_URL;
     }
 
 
